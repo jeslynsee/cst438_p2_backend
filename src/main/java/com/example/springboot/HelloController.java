@@ -10,4 +10,14 @@ public class HelloController {
     public String index() {
         return "Greetings from Spring Boot!";
     }
+
+    @GetMapping("/getExerciseNames")
+    public String getExerciseNames() {
+        return "List of exercise names";
+    }
+
+    @GetMapping("/getExerciseDetails")
+    public String getExerciseDetails() {
+        return "Details of exercises";
+    }
 }
