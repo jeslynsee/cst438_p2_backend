@@ -1,0 +1,22 @@
+# Gradle build output
+/build/
+.gradle/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Java / Spring Boot
+target/
+out/
+
+# Environment and secrets
+.env
+application-local.properties
