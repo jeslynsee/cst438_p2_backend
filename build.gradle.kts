@@ -27,6 +27,7 @@ dependencies {
     // Web + JPA + Database 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.mysql:mysql-connector-j")
 
 	// Dev Tools
