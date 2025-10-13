@@ -23,6 +23,12 @@ public class ExerciseController {
         return repository.findAll();
     }
 
+    // Get exercise details by name
+    @GetMapping("/exercises/{name}")
+    List<ExerciseEntity> getExerciseByName(@PathVariable String name) {
+        return repository.findByName(name);
+    }
+
     // Inserts a new row into exercises table
     // @RequestBody says to take JSON data from req. body and feed it to method, turning it into a row in table
     @PostMapping("/exercises")

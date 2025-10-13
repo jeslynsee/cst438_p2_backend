@@ -39,6 +39,7 @@ public class ExerciseEntity {
         this.name = name;
     }
 
+    // Basic getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -59,5 +60,7 @@ public class ExerciseEntity {
 
     public String getInstructions() { return instructions; }
     public void setInstructions(String instructions) { this.instructions = instructions; }
+
+    // Need a function for getting exercise details by name
 
 }
