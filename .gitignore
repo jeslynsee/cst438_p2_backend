@@ -20,3 +20,6 @@ out/
 # Environment and secrets
 .env
 application-local.properties
+
+# Gradle caches
+.gradle/
