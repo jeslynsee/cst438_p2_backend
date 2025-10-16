@@ -28,7 +28,7 @@ class WorkoutControllerTest {
 
     @MockBean WorkoutRepository workoutRepo;
 
-    private Workout make(String userId, String plan, String exercise, String day, int sets, int reps) {
+    private Workout make(Long userId, String plan, String exercise, String day, int sets, int reps) {
         Workout w = new Workout();
         w.setId(1L);
         w.setUserId(userId);
@@ -42,8 +42,8 @@ class WorkoutControllerTest {
 
     @Test
     void getAllWorkouts_returnsList() throws Exception {
-        var w1 = make("u1", "Plan A", "Pushup", "Mon", 3, 12);
-        var w2 = make("u1", "Plan A", "Squat",  "Wed", 4, 10);
+        var w1 = make(2L, "Plan A", "Pushup", "Mon", 3, 12);
+        var w2 = make(2L, "Plan A", "Squat",  "Wed", 4, 10);
         given(workoutRepo.findAll()).willReturn(List.of(w1, w2));
 
         mvc.perform(get("/api/workout"))
@@ -54,7 +54,7 @@ class WorkoutControllerTest {
 
     @Test
     void getWorkoutById_found_returnsWorkout() throws Exception {
-        var w = make("u1", "Plan A", "Pushup", "Mon", 3, 12);
+        var w = make(2L, "Plan A", "Pushup", "Mon", 3, 12);
         w.setId(1L);
 
         // Stub the correct repo method
@@ -62,7 +62,7 @@ class WorkoutControllerTest {
 
         mvc.perform(get("/api/workout/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId").value("u1"))
+                .andExpect(jsonPath("$.userId").value(2L))
                 .andExpect(jsonPath("$.exerciseName").value("Pushup"));
     }
 
@@ -77,9 +77,9 @@ class WorkoutControllerTest {
 
     @Test
     void addExercise_insertsWhenNotExists() throws Exception {
-        var payload = make("u1", "Plan A", "Pushup", "Mon", 3, 12);
+        var payload = make(2L, "Plan A", "Pushup", "Mon", 3, 12);
         // simulate "not exists"
-        given(workoutRepo.findByUserIdAndWorkoutPlanNameAndExerciseName("u1","Plan A","Pushup"))
+        given(workoutRepo.findByUserIdAndWorkoutPlanNameAndExerciseName(2L,"Plan A","Pushup"))
                 .willReturn(Optional.empty());
 
         mvc.perform(post("/api/workout/add-exercise")
@@ -92,7 +92,7 @@ class WorkoutControllerTest {
         verify(workoutRepo, times(1)).save(captor.capture());
         Workout saved = captor.getValue();
         // validate fields mapped
-        org.junit.jupiter.api.Assertions.assertEquals("u1", saved.getUserId());
+        org.junit.jupiter.api.Assertions.assertEquals(2L, saved.getUserId());
         org.junit.jupiter.api.Assertions.assertEquals("Plan A", saved.getWorkoutPlanName());
         org.junit.jupiter.api.Assertions.assertEquals("Pushup", saved.getExerciseName());
         org.junit.jupiter.api.Assertions.assertEquals("Mon", saved.getDay());
@@ -102,11 +102,11 @@ class WorkoutControllerTest {
 
     @Test
     void addExercise_updatesWhenExists() throws Exception {
-        var payload = make("u1", "Plan A", "Pushup", "Wed", 5, 8);
+        var payload = make(2L, "Plan A", "Pushup", "Wed", 5, 8);
 
         // simulate exists with different values to ensure update path is used
-        var existing = make("u1", "Plan A", "Pushup", "Mon", 3, 12);
-        given(workoutRepo.findByUserIdAndWorkoutPlanNameAndExerciseName("u1","Plan A","Pushup"))
+        var existing = make(2L, "Plan A", "Pushup", "Mon", 3, 12);
+        given(workoutRepo.findByUserIdAndWorkoutPlanNameAndExerciseName(2L,"Plan A","Pushup"))
                 .willReturn(Optional.of(existing));
 
         mvc.perform(post("/api/workout/add-exercise")
@@ -125,13 +125,13 @@ class WorkoutControllerTest {
 
     @Test
     void getExercisesForDay_returnsMappedDTOs() throws Exception {
-        var w1 = make("u1", "Plan A", "Pushup", "Mon", 3, 12);
-        var w2 = make("u1", "Plan A", "Squat",  "Mon", 4, 10);
+        var w1 = make(2L, "Plan A", "Pushup", "Mon", 3, 12);
+        var w2 = make(2L, "Plan A", "Squat",  "Mon", 4, 10);
 
-        given(workoutRepo.findByUserIdAndWorkoutPlanNameAndDay("u1", "Plan A", "Mon"))
+        given(workoutRepo.findByUserIdAndWorkoutPlanNameAndDay(2L, "Plan A", "Mon"))
                 .willReturn(List.of(w1, w2));
 
-        mvc.perform(get("/api/workout/{userId}/{planName}/exercises", "u1", "Plan A")
+        mvc.perform(get("/api/workout/{userId}/{planName}/exercises", 2L, "Plan A")
                         .param("day", "Mon"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Pushup"))
@@ -162,17 +162,17 @@ class WorkoutControllerTest {
     }
     @Test
     void deleteWorkoutPlan_existing_returns204() throws Exception {
-        given(workoutRepo.existsByUserIdAndWorkoutPlanName("u1", "PlanA"))
+        given(workoutRepo.existsByUserIdAndWorkoutPlanName(2L, "PlanA"))
                 .willReturn(true);
-        mvc.perform(delete("/api/workout/delete/u1/PlanA"))
+        mvc.perform(delete("/api/workout/delete/2/PlanA"))
                 .andExpect(status().isNoContent());
 
-        verify(workoutRepo).deleteByUserIdAndWorkoutPlanName("u1", "PlanA");
+        verify(workoutRepo).deleteByUserIdAndWorkoutPlanName(2L, "PlanA");
     }
 
     @Test
     void deleteWorkoutPlan_notExisting_returns404() throws Exception {
-        given(workoutRepo.existsByUserIdAndWorkoutPlanName("u1", "PlanA"))
+        given(workoutRepo.existsByUserIdAndWorkoutPlanName(2L, "PlanA"))
                 .willReturn(false);
 
         mvc.perform(delete("/api/workout/delete/u1/PlanA"))
