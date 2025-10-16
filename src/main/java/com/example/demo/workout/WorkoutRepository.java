@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WorkoutRepository extends JpaRepository<Workout, Long> {
-    boolean existsByWorkoutPlanName(@Valid String name, String planName);
+    // boolean existsByWorkoutPlanName(@Valid String name, String planName);
     Optional<Workout> findByWorkoutId(@Valid String userId);
     List<Workout> findByUserIdAndWorkoutPlanNameAndDay(String userId, String workoutPlanName, String day);
     Optional<Workout> findByUserIdAndWorkoutPlanNameAndExerciseName(String userId, String workoutPlanName, String exerciseName);
