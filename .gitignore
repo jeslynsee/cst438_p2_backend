@@ -1,6 +1,8 @@
 # Gradle build output
 /build/
 .gradle/
+out/
+bin/
 
 # IDE files
 .idea/

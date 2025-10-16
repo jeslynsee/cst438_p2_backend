@@ -12,7 +12,7 @@ import java.util.List;
  * getWorkoutById
  * getExercisesForDay
  * deleteWorkoutById
- * deleteWorkoutByUserAndPlanName
+ * deleteWorkoutByUserPlanName
  * addExercise
  *
  */
@@ -48,7 +48,7 @@ public class WorkoutController {
     }
 
     @DeleteMapping("/delete/{userId}/{planName}")
-    public ResponseEntity<Void> deleteWorkoutByUserPlanName(@PathVariable String userId, @PathVariable String planName) {
+    public ResponseEntity<Void> deleteWorkoutByUserPlanName(@PathVariable Long userId, @PathVariable String planName) {
         if(workout.existsByUserIdAndWorkoutPlanName(userId, planName)){
             workout.deleteByUserIdAndWorkoutPlanName(userId, planName);
             return ResponseEntity.noContent().build();
@@ -74,7 +74,7 @@ public class WorkoutController {
 
     @GetMapping("/{userId}/{planName}/exercises")
     public List<WorkoutExerciseDTO> getExercisesForDay(
-            @PathVariable String userId,
+            @PathVariable Long userId,
             @PathVariable("planName") String workoutPlanName,
             @RequestParam String day
     ) {
